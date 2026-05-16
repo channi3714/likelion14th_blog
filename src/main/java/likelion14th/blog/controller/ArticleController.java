@@ -43,13 +43,16 @@ public class ArticleController {
         return ResponseEntity.ok(ApiResponse.success(200, "게시글 개별 조회에 성공하였습니다.", articleDetailResponse));
     }
 
-//    @GetMapping()
-//    public ResponseEntity<ApiResponse<List<ArticleResponse>>> getArticles
-
     @PatchMapping("/{article-id}")
     public ResponseEntity<ApiResponse<ArticleDetailResponse>> updateArticle(@PathVariable("article-id") Long id, @RequestBody UpdateArticleRequest request) {
         ArticleDetailResponse articleDetailResponse = articleService.updateArticle(id, request.getTitle(), request.getContent());
 
-        return ResponseEntity.ok(ApiResponse.success(200, "게시글을 업데이트 하였습니다.",articleDetailResponse));
+        return ResponseEntity.ok(ApiResponse.success(200, "게시글을 업데이트 하였습니다.", articleDetailResponse));
+    }
+
+    @DeleteMapping("/{article-id}")
+    public ResponseEntity<ApiResponse> deleteArticle(@PathVariable("article-id") Long articleId) {
+        articleService.deleteArticle(articleId);
+        return ResponseEntity.ok(ApiResponse.success(204, "해당 게시글을 삭제 하였습니다."));
     }
 }

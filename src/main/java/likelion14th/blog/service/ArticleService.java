@@ -44,6 +44,12 @@ public class ArticleService {
     }
 
     @Transactional
+    public Void deleteArticle(Long id) {
+        articleRepository.deleteById(id);
+        return null;
+    }
+
+    @Transactional
     public List<ArticleSummaryResponse> getArticles() {
         List<Article> articles = articleRepository.findAll();
         List<ArticleSummaryResponse> articleResponses = articles.stream()
