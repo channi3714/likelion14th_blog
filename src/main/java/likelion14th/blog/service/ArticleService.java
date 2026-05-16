@@ -3,10 +3,13 @@ package likelion14th.blog.service;
 import jakarta.persistence.EntityNotFoundException;
 import likelion14th.blog.domain.Article;
 import likelion14th.blog.dto.response.ArticleDetailResponse;
+import likelion14th.blog.dto.response.ArticleSummaryResponse;
 import likelion14th.blog.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -38,5 +41,14 @@ public class ArticleService {
 
         articleRepository.save(article); // 안해줘도 된다. post는 영속성 컨텍스트에 의해서 한번도 사용한 적이 없기 때문에 해줘야 하지만 patch는 자동으로 해준다.
         return ArticleDetailResponse.from(article);
+    }
+
+    @Transactional
+    public List<ArticleSummaryResponse> getArticles() {
+        List<Article> articles = articleRepository.findAll();
+        List<ArticleSummaryResponse> articleResponses = articles.stream()
+                .map(ArticleSummaryResponse::from)
+                .toList();
+        return articleResponses;
     }
 }

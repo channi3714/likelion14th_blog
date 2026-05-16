@@ -4,11 +4,14 @@ import likelion14th.blog.dto.request.ArticleRequest;
 import likelion14th.blog.dto.request.UpdateArticleRequest;
 import likelion14th.blog.dto.response.ApiResponse;
 import likelion14th.blog.dto.response.ArticleDetailResponse;
+import likelion14th.blog.dto.response.ArticleSummaryResponse;
 import likelion14th.blog.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController // controller어노테이션 대신 RestController사용 (response body + @Controller)
 @RequiredArgsConstructor
@@ -24,6 +27,13 @@ public class ArticleController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, "게시글 생성에 성공하였습니다.", articleDetailResponse));
 //        return ResponseEntity.ok(ApiResponse.created(201, "게시글 생성에 성공하였습니다.", articleResponse)); // ApiResponse에 created메소드 만들고 해도됨
+    }
+
+    @GetMapping()
+    public ResponseEntity<ApiResponse<List<ArticleSummaryResponse>>> getArticles() {
+        List<ArticleSummaryResponse> articleSummaryResponses = articleService.getArticles();
+
+        return ResponseEntity.ok(ApiResponse.success(200, "게시글 전체 조회에 성공하였습니다.", articleSummaryResponses));
     }
 
     @GetMapping("/{article-id}")
