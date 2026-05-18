@@ -15,7 +15,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id", nullable = false)
-    private Long id;
+    private Long id;  // 만약에 이거를 commentId로 해놓고 위 컬럼 어노테이션에서 name 부분 생략하면 자동으로 컬럼명을 comment_id같은 스네이크 케이스로 바꿔줌
 
     @Column(nullable = false)
     private String author;
