@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateArticleRequest {
-    private String title;
-    private String content;
+public class DeleteCommentRequest {
     private String password;
 }

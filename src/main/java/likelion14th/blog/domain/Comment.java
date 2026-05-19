@@ -26,14 +26,27 @@ public class Comment {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private String password;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
-    public Comment(String author, String content, Article article) {
+    public Comment(String author, String content, Article article, String password) {
         this.author = author;
         this.content = content;
         this.createdAt = LocalDateTime.now();
         this.article = article;
+        this.password = password;
+    }
+
+    public void update(String author, String content) {
+        if (author != null) {
+            this.author = author;
+        }
+        if (content != null) {
+            this.content = content;
+        }
     }
 }
