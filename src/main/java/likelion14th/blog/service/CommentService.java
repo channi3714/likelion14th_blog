@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,5 +27,15 @@ public class CommentService {
 
         commentRepository.save(comment);
         return CommentResponse.of(articleId, comment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentResponse> getComments(Long articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new EntityNotFoundException(""));
+        List<Comment> comments = commentRepository.findByArticle(article);
+        List<CommentResponse> commentResponses = comments.stream()
+                .map(comment -> CommentResponse.of(articleId, comment))
+                .toList();
+        return commentResponses;
     }
 }

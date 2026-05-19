@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/articles")
@@ -20,5 +22,12 @@ public class CommentCotroller {
         CommentResponse commentResponse = commentService.addComment(request.getContent(), request.getAuthor(), articleId);
 
         return ResponseEntity.ok(ApiResponse.success(201, "댓글 생성에 성공하였습니다.", commentResponse));
+    }
+
+    @GetMapping("/{articleId}/comments")
+    public ResponseEntity<ApiResponse<List<CommentResponse>>> getComments(@PathVariable Long articleId) {
+        List<CommentResponse> commentResponses = commentService.getComments(articleId);
+
+        return ResponseEntity.ok(ApiResponse.success(200, "댓글 전체 조회에 성공하였습니다.", commentResponses));
     }
 }
