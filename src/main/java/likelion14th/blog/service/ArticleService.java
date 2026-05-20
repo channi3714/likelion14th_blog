@@ -6,6 +6,8 @@ import likelion14th.blog.domain.Comment;
 import likelion14th.blog.dto.request.CommentRequest;
 import likelion14th.blog.dto.response.ArticleDetailResponse;
 import likelion14th.blog.dto.response.ArticleSummaryResponse;
+import likelion14th.blog.exception.ArticleNotFoundException;
+import likelion14th.blog.exception.PermissionNotFoundException;
 import likelion14th.blog.repository.ArticleRepository;
 import likelion14th.blog.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,17 +35,17 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public ArticleDetailResponse getOneArticle(Long id) {
-        Article article = articleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시글을 찾을 수 없습니다."));
+        Article article = articleRepository.findById(id).orElseThrow(() -> new ArticleNotFoundException("해당 ID의 게시글을 찾을 수 없습니다."));
 
         return ArticleDetailResponse.from(article);
     }
 
     @Transactional
     public ArticleDetailResponse updateArticle(Long id, String title, String content, String password) {
-        Article article = articleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시글을 찾을 수 없습니다."));
+        Article article = articleRepository.findById(id).orElseThrow(() -> new ArticleNotFoundException("해당 ID의 게시글을 찾을 수 없습니다."));
 
         if(!article.getPassword().equals(password)) {
-            throw new RuntimeException("해당 게시글에 대한 수정 권한이 없습니다.");
+            throw new PermissionNotFoundException("해당 게시글에 대한 수정 권한이 없습니다.");
         }
         article.update(title, content);
 
@@ -53,10 +55,10 @@ public class ArticleService {
 
     @Transactional
     public Void deleteArticle(Long id, String password) {
-        Article article = articleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 게시글을 조회할 수 없습니다."));
+        Article article = articleRepository.findById(id).orElseThrow(() -> new ArticleNotFoundException("해당 게시글을 조회할 수 없습니다."));
 
         if (!article.getPassword().equals(password)) {
-            throw new RuntimeException("해당 게시글에 대한 삭제 권한이 없습니다.");
+            throw new PermissionNotFoundException("해당 게시글에 대한 삭제 권한이 없습니다.");
         }
 
         List<Comment> comments = commentRepository.findByArticle(article);
